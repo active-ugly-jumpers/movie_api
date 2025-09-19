@@ -19,6 +19,8 @@
   },
   "homepage": "https://github.com/active-ugly-jumpers/movie_api#readme",
   "dependencies": {
+    "body-parser": "^2.2.0",
+    "express": "^5.1.0",
     "lodash": "^4.17.21"
   }
 }
