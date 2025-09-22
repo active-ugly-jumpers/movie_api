@@ -1,4 +1,8 @@
-const express = require('express');
+const express = require('express'),
+    morgan = require('morgan'),
+    fs = require('fs'),
+    path = require('path');
+
 const app = express();
 
 let topBooks = [
@@ -15,15 +19,14 @@ let topBooks = [
         author: 'Stephanie Meyer'
     }
 ];
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), { flags: 'a' })
 
+app.use(morgan('common', { stream: accessLogStream }));
 // GET requests
 app.get('/', (req, res) => {
     res.send('Welcome to my book club!');
 });
-
-app.get('/documentation', (req, res) => {
-    res.sendFile('public/documentation.html', { root: __dirname });
-});
+app.use(express.static('public'));
 
 app.get('/books', (req, res) => {
     res.json(topBooks);
