@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie API Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .method {
+            font-weight: bold;
+            color: #007acc;
+            text-align: center;
+        }
+        .url {
+            font-family: monospace;
+            background-color: #f8f8f8;
+            padding: 4px;
+        }
+        .request {
+            font-size: 0.9em;
+            font-family: monospace;
+            background-color: #f8f8f8;
+            padding: 4px;
+        }
+        .response {
+            font-size: 0.9em;
+            font-family: monospace;
+            background-color: #f0f8f0;
+            padding: 4px;
+            /* max-width: 400px; */
+        }
+        .business-logic {
+            font-size: 0.9em;
+            max-width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Movie API Documentation</h1>
+    
+    <p>This API provides access to movie data and user management functionality. Below are the available endpoints:</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Business Logic</th>
+                <th>HTTP Method</th>
+                <th>URL</th>
+                <th>Request Body</th>
+                <th>Response Body</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="business-logic">Return a list of ALL movies to the user</td>
+                <td class="method">GET</td>
+                <td class="url">/movies</td>
+                <td class="request">None</td>
+                <td class="response">JSON array:<br>
+                [<br>
+                &nbsp;&nbsp;{<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;"title": "string",<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;"description": "string",<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;"genre": "string",<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;"director": "string",<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;"imageURL": "string",<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;"featured": "boolean"<br>
+                &nbsp;&nbsp;},<br>
+                &nbsp;&nbsp;...<br>
+                ]</td>
+            </tr>
+            <tr>
+                <td class="business-logic">Return data (description, genre, director, image URL, whether it's featured or not) about a single movie by title to the user</td>
+                <td class="method">GET</td>
+                <td class="url">/movies/[title]</td>
+                <td class="request">None</td>
+                <td class="response">JSON object:<br>
+                {<br>
+                &nbsp;&nbsp;"title": "string",<br>
+                &nbsp;&nbsp;"description": "string",<br>
+                &nbsp;&nbsp;"genre": "string",<br>
+                &nbsp;&nbsp;"director": "string",<br>
+                &nbsp;&nbsp;"imageURL": "string",<br>
+                &nbsp;&nbsp;"featured": "boolean"<br>
+                }</td>
+            </tr>
+            <tr>
+                <td class="business-logic">Return data about a genre (description) by name/title (e.g., "Thriller")</td>
+                <td class="method">GET</td>
+                <td class="url">/genres/[name]</td>
+                <td class="request">None</td>
+                <td class="response">JSON object:<br>
+                {<br>
+                &nbsp;&nbsp;"name": "string",<br>
+                &nbsp;&nbsp;"description": "string"<br>
+                }</td>
+            </tr>
+            <tr>
+                <td class="business-logic">Return data about a director (bio, birth year, death year) by name</td>
+                <td class="method">GET</td>
+                <td class="url">/directors/[name]</td>
+                <td class="request">None</td>
+                <td class="response">JSON object:<br>
+                {<br>
+                &nbsp;&nbsp;"name": "string",<br>
+                &nbsp;&nbsp;"bio": "string",<br>
+                &nbsp;&nbsp;"birthYear": "string",<br>
+                &nbsp;&nbsp;"deathYear": "string"<br>
+                }</td>
+            </tr>
+            <tr>
+                <td class="business-logic">Allow new users to register</td>
+                <td class="method">POST</td>
+                <td class="url">/users</td>
+                <td class="request">JSON object:<br>
+                {<br>
+                &nbsp;&nbsp;"username": "string",<br>
+                &nbsp;&nbsp;"password": "string",<br>
+                &nbsp;&nbsp;"email": "string",<br>
+                &nbsp;&nbsp;"birthday": "date"<br>
+                }</td>
+                <td class="response">JSON object:<br>
+                {<br>
+                &nbsp;&nbsp;"id": "string",<br>
+                &nbsp;&nbsp;"username": "string",<br>
+                &nbsp;&nbsp;"email": "string",<br>
+                &nbsp;&nbsp;"birthday": "date",<br>
+                &nbsp;&nbsp;"favoriteMovies": []<br>
+                }</td>
+            </tr>
+            <tr>
+                <td class="business-logic">Allow users to update their user info (username)</td>
+                <td class="method">PUT</td>
+                <td class="url">/users/[unsername]</td>
+                <td class="request">None</td>
+                <td class="response">JSON object:<br>
+                {<br>
+                &nbsp;&nbsp;"id": "string",<br>
+                &nbsp;&nbsp;"username": "string",<br>
+                &nbsp;&nbsp;"email": "string",<br>
+                &nbsp;&nbsp;"birthday": "date",<br>
+                &nbsp;&nbsp;"favoriteMovies": ["array"]<br>
+                }</td>
+            </tr>
+            <tr>
+                <td class="business-logic">Allow users to add a movie to their list of favorites (showing only a text that a movie has been added—more on this later)</td>
+                <td class="method">PUT</td>
+                <td class="url">/users/[username]/movies/[movieId]</td>
+                <td class="request">None</td>
+                <td class="response">Text message:<br>
+                "Movie has been added to favorites"</td>
+            </tr>
+            <tr>
+                <td class="business-logic">Allow users to remove a movie from their list of favorites (showing only a text that a movie has been removed—more on this later)</td>
+                <td class="method">DELETE</td>
+                <td class="url">/users/[username]/movies/[movieId]</td>
+                <td class="request">None</td>
+                <td class="response">Text message:<br>
+                "Movie has been removed from favorites"</td>
+            </tr>
+            <tr>
+                <td class="business-logic">Allow existing users to deregister (showing only a text that a user email has been removed—more on this later)</td>
+                <td class="method">DELETE</td>
+                <td class="url">/users/[username]</td>
+                <td class="request">None</td>
+                <td class="response">Text message:<br>
+                "User [email] has been removed"</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <h2>Notes</h2>
+    <ul>
+        <li><strong>[title]</strong> - Replace with the actual movie title</li>
+        <li><strong>[name]</strong> - Replace with the actual genre or director name</li>
+        <li><strong>[username]</strong> - Replace with the actual username</li>
+        <li><strong>[movieId]</strong> - Replace with the actual movie ID</li>
+        <li>All JSON responses will include appropriate HTTP status codes (200, 201, 400, 404, 500)</li>
+        <li>For POST and PUT requests, include the JSON object in the request body with Content-Type: application/json</li>
+        <li>Error responses will include appropriate HTTP status codes and error messages in JSON format</li>
+    </ul>
+</body>
+</html>
