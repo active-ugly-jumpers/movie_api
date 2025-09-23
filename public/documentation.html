@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,202 +8,270 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 1600px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
             line-height: 1.6;
+            background-color: #f9f9f9;
         }
+
         h1 {
             color: #333;
             text-align: center;
+            margin-bottom: 30px;
         }
+
+        .intro {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin: 20px 0;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        th, td {
+
+        th,
+        td {
             border: 1px solid #ddd;
             padding: 12px;
             text-align: left;
             vertical-align: top;
         }
+
         th {
-            background-color: #f2f2f2;
+            background-color: #3b444a;
+            color: white;
             font-weight: bold;
-        }
-        .method {
-            font-weight: bold;
-            color: #007acc;
             text-align: center;
         }
+
+        .method {
+            font-weight: bold;
+            text-align: center;
+            padding: 8px;
+            border-radius: 4px;
+            color: #1b1f22;
+        }
+
         .url {
-            font-family: monospace;
-            background-color: #f8f8f8;
-            padding: 4px;
+            font-family: 'Courier New', monospace;
+            padding: 8px;
+            border-radius: 4px;
         }
-        .request {
-            font-size: 0.9em;
-            font-family: monospace;
-            background-color: #f8f8f8;
-            padding: 4px;
+
+        .code-block {
+            font-family: 'Courier New', monospace;
+            background-color: #f8f9fa;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            line-height: 1.4;
         }
-        .response {
-            font-size: 0.9em;
-            font-family: monospace;
-            background-color: #f0f8f0;
-            padding: 4px;
-            /* max-width: 400px; */
+
+        .response-block {
+            font-family: 'Courier New', monospace;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            line-height: 1.4;
         }
-        .business-logic {
-            font-size: 0.9em;
-            max-width: 300px;
+
+        .description {
+            font-size: 0.95em;
+            max-width: 280px;
+        }
+
+        .notes {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .param-note {
+            color: #666;
+            font-style: italic;
+            font-size: 0.85em;
         }
     </style>
 </head>
+
 <body>
     <h1>Movie API Documentation</h1>
-    
-    <p>This API provides access to movie data and user management functionality. Below are the available endpoints:</p>
-    
+
+    <div class="intro">
+        <p><strong>Movie API</strong> provides comprehensive access to movie data and user management functionality.
+            This RESTful API allows you to retrieve movie information, manage user accounts, and handle user favorites.
+        </p>
+    </div>
+
     <table>
         <thead>
             <tr>
-                <th>Business Logic</th>
-                <th>HTTP Method</th>
-                <th>URL</th>
+                <th>Description</th>
+                <th>Method</th>
+                <th>Endpoint URL</th>
+                <th>Query Parameters</th>
                 <th>Request Body</th>
-                <th>Response Body</th>
+                <th>Response Format</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td class="business-logic">Return a list of ALL movies to the user</td>
-                <td class="method">GET</td>
+                <td class="description">Returns a complete list of all movies in the database with full details</td>
+                <td class="method get">GET</td>
                 <td class="url">/movies</td>
-                <td class="request">None</td>
-                <td class="response">JSON array:<br>
-                [<br>
-                &nbsp;&nbsp;{<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;"title": "string",<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;"description": "string",<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;"genre": "string",<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;"director": "string",<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;"imageURL": "string",<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;"featured": "boolean"<br>
-                &nbsp;&nbsp;},<br>
-                &nbsp;&nbsp;...<br>
-                ]</td>
+                <td class="param-note">None</td>
+                <td class="code-block">None</td>
+                <td class="response-block">JSON Array of movie objects:<br>
+                    [<br>
+                    &nbsp;&nbsp;{<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;"id": 1,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;"title": "No Other Land",<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;"description": "A powerful documentary...",<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;"genre": {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name": "Documentary",<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"description": "Non-fiction films"<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;},<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;"directors": {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name": "Basel Adra...",<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"bio": "Collaborative...",<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"birthYear": "Various"<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;},<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;"imageURL": "https://example.com/...",<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;"featured": true<br>
+                    &nbsp;&nbsp;}<br>
+                    ]</td>
             </tr>
             <tr>
-                <td class="business-logic">Return data (description, genre, director, image URL, whether it's featured or not) about a single movie by title to the user</td>
-                <td class="method">GET</td>
+                <td class="description">Returns detailed information about a specific movie by its title</td>
+                <td class="method get">GET</td>
                 <td class="url">/movies/[title]</td>
-                <td class="request">None</td>
-                <td class="response">JSON object:<br>
-                {<br>
-                &nbsp;&nbsp;"title": "string",<br>
-                &nbsp;&nbsp;"description": "string",<br>
-                &nbsp;&nbsp;"genre": "string",<br>
-                &nbsp;&nbsp;"director": "string",<br>
-                &nbsp;&nbsp;"imageURL": "string",<br>
-                &nbsp;&nbsp;"featured": "boolean"<br>
-                }</td>
+                <td class="param-note">title (URL parameter)<br>Example: /movies/Tár</td>
+                <td class="code-block">None</td>
+                <td class="response-block">JSON Object:<br>
+                    {<br>
+                    &nbsp;&nbsp;"id": 3,<br>
+                    &nbsp;&nbsp;"title": "Tár",<br>
+                    &nbsp;&nbsp;"description": "A renowned conductor...",<br>
+                    &nbsp;&nbsp;"genre": {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;"name": "Drama",<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;"description": "Character-driven narratives"<br>
+                    &nbsp;&nbsp;},<br>
+                    &nbsp;&nbsp;"directors": {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;"name": "Todd Field",<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;"bio": "American filmmaker...",<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;"birthYear": "1964"<br>
+                    &nbsp;&nbsp;},<br>
+                    &nbsp;&nbsp;"imageURL": "https://example.com/tar.jpg",<br>
+                    &nbsp;&nbsp;"featured": false<br>
+                    }</td>
             </tr>
             <tr>
-                <td class="business-logic">Return data about a genre (description) by name/title (e.g., "Thriller")</td>
-                <td class="method">GET</td>
+                <td class="description">Returns information about a specific genre including its description</td>
+                <td class="method get">GET</td>
                 <td class="url">/genres/[name]</td>
-                <td class="request">None</td>
-                <td class="response">JSON object:<br>
-                {<br>
-                &nbsp;&nbsp;"name": "string",<br>
-                &nbsp;&nbsp;"description": "string"<br>
-                }</td>
+                <td class="param-note">name (URL parameter)<br>Example: /genres/Drama</td>
+                <td class="code-block">None</td>
+                <td class="response-block">JSON Object:<br>
+                    {<br>
+                    &nbsp;&nbsp;"name": "Drama",<br>
+                    &nbsp;&nbsp;"description": "Character-driven narratives"<br>
+                    }</td>
             </tr>
             <tr>
-                <td class="business-logic">Return data about a director (bio, birth year, death year) by name</td>
-                <td class="method">GET</td>
+                <td class="description">Returns biographical information about a specific director</td>
+                <td class="method get">GET</td>
                 <td class="url">/directors/[name]</td>
-                <td class="request">None</td>
-                <td class="response">JSON object:<br>
-                {<br>
-                &nbsp;&nbsp;"name": "string",<br>
-                &nbsp;&nbsp;"bio": "string",<br>
-                &nbsp;&nbsp;"birthYear": "string",<br>
-                &nbsp;&nbsp;"deathYear": "string"<br>
-                }</td>
+                <td class="param-note">name (URL parameter)<br>Example: /directors/Todd%20Field</td>
+                <td class="code-block">None</td>
+                <td class="response-block">JSON Object:<br>
+                    {<br>
+                    &nbsp;&nbsp;"name": "Todd Field",<br>
+                    &nbsp;&nbsp;"bio": "American filmmaker and former actor",<br>
+                    &nbsp;&nbsp;"birthYear": "1964"<br>
+                    }</td>
             </tr>
             <tr>
-                <td class="business-logic">Allow new users to register</td>
-                <td class="method">POST</td>
+                <td class="description">Creates a new user account in the system</td>
+                <td class="method post">POST</td>
                 <td class="url">/users</td>
-                <td class="request">JSON object:<br>
-                {<br>
-                &nbsp;&nbsp;"username": "string",<br>
-                &nbsp;&nbsp;"password": "string",<br>
-                &nbsp;&nbsp;"email": "string",<br>
-                &nbsp;&nbsp;"birthday": "date"<br>
-                }</td>
-                <td class="response">JSON object:<br>
-                {<br>
-                &nbsp;&nbsp;"id": "string",<br>
-                &nbsp;&nbsp;"username": "string",<br>
-                &nbsp;&nbsp;"email": "string",<br>
-                &nbsp;&nbsp;"birthday": "date",<br>
-                &nbsp;&nbsp;"favoriteMovies": []<br>
-                }</td>
+                <td class="param-note">None</td>
+                <td class="code-block">JSON Object:<br>
+                    {<br>
+                    &nbsp;&nbsp;"username": "johndoe",<br>
+                    &nbsp;&nbsp;"password": "securepass123"<br>
+                    }</td>
+                <td class="response-block">JSON Object:<br>
+                    {<br>
+                    &nbsp;&nbsp;"id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",<br>
+                    &nbsp;&nbsp;"username": "johndoe",<br>
+                    &nbsp;&nbsp;"favoriteMovies": []<br>
+                    }<br><br>
+                    Status: 201 Created</td>
             </tr>
             <tr>
-                <td class="business-logic">Allow users to update their user info (username)</td>
-                <td class="method">PUT</td>
-                <td class="url">/users/[unsername]</td>
-                <td class="request">None</td>
-                <td class="response">JSON object:<br>
-                {<br>
-                &nbsp;&nbsp;"id": "string",<br>
-                &nbsp;&nbsp;"username": "string",<br>
-                &nbsp;&nbsp;"email": "string",<br>
-                &nbsp;&nbsp;"birthday": "date",<br>
-                &nbsp;&nbsp;"favoriteMovies": ["array"]<br>
-                }</td>
-            </tr>
-            <tr>
-                <td class="business-logic">Allow users to add a movie to their list of favorites (showing only a text that a movie has been added—more on this later)</td>
-                <td class="method">PUT</td>
-                <td class="url">/users/[username]/movies/[movieId]</td>
-                <td class="request">None</td>
-                <td class="response">Text message:<br>
-                "Movie has been added to favorites"</td>
-            </tr>
-            <tr>
-                <td class="business-logic">Allow users to remove a movie from their list of favorites (showing only a text that a movie has been removed—more on this later)</td>
-                <td class="method">DELETE</td>
-                <td class="url">/users/[username]/movies/[movieId]</td>
-                <td class="request">None</td>
-                <td class="response">Text message:<br>
-                "Movie has been removed from favorites"</td>
-            </tr>
-            <tr>
-                <td class="business-logic">Allow existing users to deregister (showing only a text that a user email has been removed—more on this later)</td>
-                <td class="method">DELETE</td>
+                <td class="description">Updates user information (username and/or password)</td>
+                <td class="method put">PUT</td>
                 <td class="url">/users/[username]</td>
-                <td class="request">None</td>
-                <td class="response">Text message:<br>
-                "User [email] has been removed"</td>
+                <td class="param-note">username (URL parameter)<br>Example: /users/johndoe</td>
+                <td class="code-block">JSON Object:<br>
+                    {<br>
+                    &nbsp;&nbsp;"username": "johnsmith",<br>
+                    &nbsp;&nbsp;"password": "newpassword456"<br>
+                    }</td>
+                <td class="response-block">JSON Object:<br>
+                    {<br>
+                    &nbsp;&nbsp;"id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",<br>
+                    &nbsp;&nbsp;"username": "johnsmith",<br>
+                    &nbsp;&nbsp;"favoriteMovies": [1, 3]<br>
+                    }<br><br>
+                    Status: 200 OK</td>
+            </tr>
+            <tr>
+                <td class="description">Adds a movie to the user's list of favorite movies</td>
+                <td class="method put">PUT</td>
+                <td class="url">/users/[username]/movies/[movieId]</td>
+                <td class="param-note">username (URL parameter)<br>movieId (URL parameter)<br>Example:
+                    /users/johndoe/movies/1</td>
+                <td class="code-block">None</td>
+                <td class="response-block">Plain Text:<br>
+                    "Movie 'No Other Land' has been added to johndoe's favorites"<br><br>
+                    Status: 200 OK</td>
+            </tr>
+            <tr>
+                <td class="description">Removes a movie from the user's list of favorite movies</td>
+                <td class="method delete">DELETE</td>
+                <td class="url">/users/[username]/movies/[movieId]</td>
+                <td class="param-note">username (URL parameter)<br>movieId (URL parameter)<br>Example:
+                    /users/johndoe/movies/1</td>
+                <td class="code-block">None</td>
+                <td class="response-block">Plain Text:<br>
+                    "Movie 'No Other Land' has been removed from johndoe's favorites"<br><br>
+                    Status: 200 OK</td>
+            </tr>
+            <tr>
+                <td class="description">Completely removes a user account and all associated data from the system</td>
+                <td class="method delete">DELETE</td>
+                <td class="url">/users/[username]</td>
+                <td class="param-note">username (URL parameter)<br>Example: /users/johndoe</td>
+                <td class="code-block">None</td>
+                <td class="response-block">Plain Text:<br>
+                    "User johndoe has been removed"<br><br>
+                    Status: 200 OK</td>
             </tr>
         </tbody>
     </table>
-    
-    <h2>Notes</h2>
-    <ul>
-        <li><strong>[title]</strong> - Replace with the actual movie title</li>
-        <li><strong>[name]</strong> - Replace with the actual genre or director name</li>
-        <li><strong>[username]</strong> - Replace with the actual username</li>
-        <li><strong>[movieId]</strong> - Replace with the actual movie ID</li>
-        <li>All JSON responses will include appropriate HTTP status codes (200, 201, 400, 404, 500)</li>
-        <li>For POST and PUT requests, include the JSON object in the request body with Content-Type: application/json</li>
-        <li>Error responses will include appropriate HTTP status codes and error messages in JSON format</li>
-    </ul>
 </body>
+
 </html>
