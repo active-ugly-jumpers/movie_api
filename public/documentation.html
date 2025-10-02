@@ -8,7 +8,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 1200px;
+            max-width: 1600px;
             margin: 0 auto;
             padding: 20px;
             line-height: 1.6;
@@ -48,7 +48,7 @@
         }
 
         th {
-            background-color: #3b444a;
+            background-color: #2c3e50;
             color: white;
             font-weight: bold;
             text-align: center;
@@ -59,13 +59,32 @@
             text-align: center;
             padding: 8px;
             border-radius: 4px;
-            color: #1b1f22;
+            color: white;
+        }
+
+        .method.get {
+            background-color: #28a745;
+        }
+
+        .method.post {
+            background-color: #007bff;
+        }
+
+        .method.put {
+            background-color: #ffc107;
+            color: #333;
+        }
+
+        .method.delete {
+            background-color: #dc3545;
         }
 
         .url {
             font-family: 'Courier New', monospace;
+            background-color: #f8f9fa;
             padding: 8px;
             border-radius: 4px;
+            font-weight: bold;
         }
 
         .code-block {
@@ -75,14 +94,17 @@
             border-radius: 4px;
             font-size: 0.85em;
             line-height: 1.4;
+            border-left: 3px solid #007bff;
         }
 
         .response-block {
             font-family: 'Courier New', monospace;
+            background-color: #f0f8f0;
             padding: 8px;
             border-radius: 4px;
             font-size: 0.85em;
             line-height: 1.4;
+            border-left: 3px solid #28a745;
         }
 
         .description {
@@ -111,8 +133,10 @@
 
     <div class="intro">
         <p><strong>Movie API</strong> provides comprehensive access to movie data and user management functionality.
-            This RESTful API allows you to retrieve movie information, manage user accounts, and handle user favorites.
-        </p>
+            This RESTful API connects to a MongoDB database using Mongoose models.</p>
+        <p><strong>Base URL:</strong> <code>http://localhost:8080</code></p>
+        <p><strong>Database:</strong> MongoDB (cfDB)</p>
+        <p><strong>Content-Type:</strong> <code>application/json</code> (for POST/PUT requests)</p>
     </div>
 
     <table>
@@ -128,147 +152,172 @@
         </thead>
         <tbody>
             <tr>
-                <td class="description">Returns a complete list of all movies in the database with full details</td>
+                <td class="description">Returns a complete list of all movies from MongoDB database</td>
                 <td class="method get">GET</td>
                 <td class="url">/movies</td>
                 <td class="param-note">None</td>
                 <td class="code-block">None</td>
-                <td class="response-block">JSON Array of movie objects:<br>
+                <td class="response-block">JSON Array:<br>
                     [<br>
                     &nbsp;&nbsp;{<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;"id": 1,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;"_id": "68dab3357250d28a9cce5f47",<br>
                     &nbsp;&nbsp;&nbsp;&nbsp;"title": "No Other Land",<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;"description": "A powerful documentary...",<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;"year": 2024,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;"description": "Shows the destruction...",<br>
                     &nbsp;&nbsp;&nbsp;&nbsp;"genre": {<br>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name": "Documentary",<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"description": "Non-fiction films"<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"description": "Non-fiction films..."<br>
                     &nbsp;&nbsp;&nbsp;&nbsp;},<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;"directors": {<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name": "Basel Adra...",<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"bio": "Collaborative...",<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"birthYear": "Various"<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;"director": {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name": "Basel Adra",<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"bio": "Palestinian journalist...",<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"birthYear": null,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"deathYear": null<br>
                     &nbsp;&nbsp;&nbsp;&nbsp;},<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;"imageURL": "https://example.com/...",<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;"featured": true<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;"featured": true,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;"imageURL": "https://upload.wikimedia.org/..."<br>
                     &nbsp;&nbsp;}<br>
                     ]</td>
             </tr>
             <tr>
-                <td class="description">Returns detailed information about a specific movie by its title</td>
+                <td class="description">Returns detailed information about a specific movie by exact title match</td>
                 <td class="method get">GET</td>
                 <td class="url">/movies/[title]</td>
                 <td class="param-note">title (URL parameter)<br>Example: /movies/Tár</td>
                 <td class="code-block">None</td>
                 <td class="response-block">JSON Object:<br>
                     {<br>
-                    &nbsp;&nbsp;"id": 3,<br>
+                    &nbsp;&nbsp;"_id": "68dab3357250d28a9cce5f48",<br>
                     &nbsp;&nbsp;"title": "Tár",<br>
-                    &nbsp;&nbsp;"description": "A renowned conductor...",<br>
+                    &nbsp;&nbsp;"year": 2022,<br>
+                    &nbsp;&nbsp;"description": "A celebrated music director's life...",<br>
                     &nbsp;&nbsp;"genre": {<br>
                     &nbsp;&nbsp;&nbsp;&nbsp;"name": "Drama",<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;"description": "Character-driven narratives"<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;"description": "Serious, character-driven..."<br>
                     &nbsp;&nbsp;},<br>
-                    &nbsp;&nbsp;"directors": {<br>
+                    &nbsp;&nbsp;"director": {<br>
                     &nbsp;&nbsp;&nbsp;&nbsp;"name": "Todd Field",<br>
                     &nbsp;&nbsp;&nbsp;&nbsp;"bio": "American filmmaker...",<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;"birthYear": "1964"<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;"birthYear": 1964,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;"deathYear": null<br>
                     &nbsp;&nbsp;},<br>
-                    &nbsp;&nbsp;"imageURL": "https://example.com/tar.jpg",<br>
-                    &nbsp;&nbsp;"featured": false<br>
+                    &nbsp;&nbsp;"featured": true,<br>
+                    &nbsp;&nbsp;"imageURL": "https://upload.wikimedia.org/..."<br>
                     }</td>
             </tr>
             <tr>
-                <td class="description">Returns information about a specific genre including its description</td>
+                <td class="description">Returns genre information by finding the first movie with that genre</td>
                 <td class="method get">GET</td>
                 <td class="url">/genres/[name]</td>
-                <td class="param-note">name (URL parameter)<br>Example: /genres/Drama</td>
+                <td class="param-note">name (URL parameter)<br>Example: /genres/Fantasy</td>
                 <td class="code-block">None</td>
                 <td class="response-block">JSON Object:<br>
                     {<br>
-                    &nbsp;&nbsp;"name": "Drama",<br>
-                    &nbsp;&nbsp;"description": "Character-driven narratives"<br>
+                    &nbsp;&nbsp;"name": "Fantasy",<br>
+                    &nbsp;&nbsp;"description": "Stories incorporating magical, supernatural, or dreamlike elements."<br>
                     }</td>
             </tr>
             <tr>
-                <td class="description">Returns biographical information about a specific director</td>
+                <td class="description">Returns director information by finding the first movie with that director</td>
                 <td class="method get">GET</td>
                 <td class="url">/directors/[name]</td>
-                <td class="param-note">name (URL parameter)<br>Example: /directors/Todd%20Field</td>
+                <td class="param-note">name (URL parameter)<br>Example: /directors/Apichatpong%20Weerasethakul</td>
                 <td class="code-block">None</td>
                 <td class="response-block">JSON Object:<br>
                     {<br>
-                    &nbsp;&nbsp;"name": "Todd Field",<br>
-                    &nbsp;&nbsp;"bio": "American filmmaker and former actor",<br>
-                    &nbsp;&nbsp;"birthYear": "1964"<br>
+                    &nbsp;&nbsp;"name": "Apichatpong Weerasethakul",<br>
+                    &nbsp;&nbsp;"bio": "Thai independent film director, screenwriter, and producer.",<br>
+                    &nbsp;&nbsp;"birthYear": 1970,<br>
+                    &nbsp;&nbsp;"deathYear": null<br>
                     }</td>
             </tr>
             <tr>
-                <td class="description">Creates a new user account in the system</td>
+                <td class="description">Creates a new user account with username validation (must be unique)</td>
                 <td class="method post">POST</td>
                 <td class="url">/users</td>
                 <td class="param-note">None</td>
-                <td class="code-block">JSON Object:<br>
+                <td class="code-block">JSON Object (required):<br>
                     {<br>
-                    &nbsp;&nbsp;"username": "johndoe",<br>
-                    &nbsp;&nbsp;"password": "securepass123"<br>
+                    &nbsp;&nbsp;"username": "cinephile01",<br>
+                    &nbsp;&nbsp;"email": "cinephile01@example.com",<br>
+                    &nbsp;&nbsp;"password": "password123",<br>
+                    &nbsp;&nbsp;"birthday": "1990-05-12"<br>
                     }</td>
                 <td class="response-block">JSON Object:<br>
                     {<br>
-                    &nbsp;&nbsp;"id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",<br>
-                    &nbsp;&nbsp;"username": "johndoe",<br>
-                    &nbsp;&nbsp;"favoriteMovies": []<br>
+                    &nbsp;&nbsp;"_id": "68dab3827250d28a9cce5f51",<br>
+                    &nbsp;&nbsp;"username": "cinephile01",<br>
+                    &nbsp;&nbsp;"email": "cinephile01@example.com",<br>
+                    &nbsp;&nbsp;"password": "password123",<br>
+                    &nbsp;&nbsp;"birthday": "1990-05-12T00:00:00.000Z",<br>
+                    &nbsp;&nbsp;"favoriteMovies": [],<br>
+                    &nbsp;&nbsp;"__v": 0<br>
                     }<br><br>
-                    Status: 201 Created</td>
+                    Status: 201 Created<br><br>
+                    Error Response:<br>
+                    "username already exists" (Status: 400)</td>
             </tr>
             <tr>
-                <td class="description">Updates user information (username and/or password)</td>
+                <td class="description">Updates user information using $set operator (only provided fields are updated)</td>
                 <td class="method put">PUT</td>
                 <td class="url">/users/[username]</td>
-                <td class="param-note">username (URL parameter)<br>Example: /users/johndoe</td>
-                <td class="code-block">JSON Object:<br>
+                <td class="param-note">username (URL parameter)<br>Example: /users/cinephile01</td>
+                <td class="code-block">JSON Object (optional fields):<br>
                     {<br>
-                    &nbsp;&nbsp;"username": "johnsmith",<br>
-                    &nbsp;&nbsp;"password": "newpassword456"<br>
+                    &nbsp;&nbsp;"username": "newusername",<br>
+                    &nbsp;&nbsp;"email": "newemail@example.com",<br>
+                    &nbsp;&nbsp;"password": "newpassword",<br>
+                    &nbsp;&nbsp;"birthday": "1990-05-12"<br>
                     }</td>
                 <td class="response-block">JSON Object:<br>
                     {<br>
-                    &nbsp;&nbsp;"id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",<br>
-                    &nbsp;&nbsp;"username": "johnsmith",<br>
-                    &nbsp;&nbsp;"favoriteMovies": [1, 3]<br>
+                    &nbsp;&nbsp;"_id": "68dab3827250d28a9cce5f51",<br>
+                    &nbsp;&nbsp;"username": "newusername",<br>
+                    &nbsp;&nbsp;"email": "newemail@example.com",<br>
+                    &nbsp;&nbsp;"password": "newpassword",<br>
+                    &nbsp;&nbsp;"birthday": "1990-05-12T00:00:00.000Z",<br>
+                    &nbsp;&nbsp;"favoriteMovies": ["68dab3357250d28a9cce5f47"],<br>
+                    &nbsp;&nbsp;"__v": 0<br>
                     }<br><br>
-                    Status: 200 OK</td>
+                    Status: 200 OK<br><br>
+                    Error Response:<br>
+                    "User not found" (Status: 404)</td>
             </tr>
             <tr>
-                <td class="description">Adds a movie to the user's list of favorite movies</td>
+                <td class="description">Adds a movie ObjectId to user's favoriteMovies array using $push operator</td>
                 <td class="method put">PUT</td>
                 <td class="url">/users/[username]/movies/[movieId]</td>
-                <td class="param-note">username (URL parameter)<br>movieId (URL parameter)<br>Example:
-                    /users/johndoe/movies/1</td>
+                <td class="param-note">username (URL parameter)<br>movieId (MongoDB ObjectId)<br>Example: /users/cinephile01/movies/68dab3357250d28a9cce5f47</td>
                 <td class="code-block">None</td>
                 <td class="response-block">Plain Text:<br>
-                    "Movie 'No Other Land' has been added to johndoe's favorites"<br><br>
-                    Status: 200 OK</td>
+                    "Movie has been added to cinephile01's favorites"<br><br>
+                    Status: 200 OK<br><br>
+                    Error Response:<br>
+                    "User not found" (Status: 404)</td>
             </tr>
             <tr>
-                <td class="description">Removes a movie from the user's list of favorite movies</td>
+                <td class="description">Removes a movie ObjectId from user's favoriteMovies array using $pull operator</td>
                 <td class="method delete">DELETE</td>
                 <td class="url">/users/[username]/movies/[movieId]</td>
-                <td class="param-note">username (URL parameter)<br>movieId (URL parameter)<br>Example:
-                    /users/johndoe/movies/1</td>
+                <td class="param-note">username (URL parameter)<br>movieId (MongoDB ObjectId)<br>Example: /users/cinephile01/movies/68dab3357250d28a9cce5f47</td>
                 <td class="code-block">None</td>
                 <td class="response-block">Plain Text:<br>
-                    "Movie 'No Other Land' has been removed from johndoe's favorites"<br><br>
-                    Status: 200 OK</td>
+                    "Movie has been removed from cinephile01's favorites"<br><br>
+                    Status: 200 OK<br><br>
+                    Error Response:<br>
+                    "User not found" (Status: 404)</td>
             </tr>
             <tr>
-                <td class="description">Completely removes a user account and all associated data from the system</td>
+                <td class="description">Completely removes a user document from the database using findOneAndDelete</td>
                 <td class="method delete">DELETE</td>
                 <td class="url">/users/[username]</td>
-                <td class="param-note">username (URL parameter)<br>Example: /users/johndoe</td>
+                <td class="param-note">username (URL parameter)<br>Example: /users/cinephile01</td>
                 <td class="code-block">None</td>
                 <td class="response-block">Plain Text:<br>
-                    "User johndoe has been removed"<br><br>
-                    Status: 200 OK</td>
+                    "cinephile01 was deleted."<br><br>
+                    Status: 200 OK<br><br>
+                    Error Response:<br>
+                    "cinephile01 was not found" (Status: 404)</td>
             </tr>
         </tbody>
     </table>
