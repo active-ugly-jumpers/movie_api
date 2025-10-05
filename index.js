@@ -121,6 +121,10 @@ app.post('/users', (req, res) => {
 
 // PUT: Allow users to update their user info
 app.put('/users/:username', passport.authenticate('jwt', { session: false }), (req, res) => {
+    // Check if the user is updating their own info
+    if (req.user.username !== req.params.username) {
+        return res.status(400).send('Permission denied: You can only update your own profile.');
+    }
     Users.findOneAndUpdate(
         { username: req.params.username },
         {
