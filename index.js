@@ -16,6 +16,9 @@ mongoose.connect('mongodb://localhost:27017/cfDB', { useNewUrlParser: true, useU
 
 // Middleware to parse JSON bodies
 app.use(express.json());
+let auth = require('./auth')(app); // Import auth.js file and pass in app
+const passport = require('passport');
+require('./passport'); // Import passport.js file
 
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), { flags: 'a' })
 app.use(morgan('common', { stream: accessLogStream }));
@@ -99,13 +102,13 @@ app.post('/users', (req, res) => {
                     password: req.body.password,
                     birthday: req.body.birthday
                 })
-                .then((user) => {
-                    res.status(201).json(user);
-                })
-                .catch((error) => {
-                    console.error(error);
-                    res.status(500).send('Error: ' + error);
-                });
+                    .then((user) => {
+                        res.status(201).json(user);
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                        res.status(500).send('Error: ' + error);
+                    });
             }
         })
         .catch((error) => {
@@ -128,16 +131,16 @@ app.put('/users/:username', (req, res) => {
         },
         { new: true } // This line makes sure that the updated document is returned
     )
-    .then((updatedUser) => {
-        if (!updatedUser) {
-            return res.status(404).send('User not found');
-        }
-        res.json(updatedUser);
-    })
-    .catch((err) => {
-        console.error(err);
-        res.status(500).send('Error: ' + err);
-    });
+        .then((updatedUser) => {
+            if (!updatedUser) {
+                return res.status(404).send('User not found');
+            }
+            res.json(updatedUser);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
 });
 
 // PUT: Allow users to add a movie to their list of favorites
@@ -147,16 +150,16 @@ app.put('/users/:username/movies/:movieId', (req, res) => {
         { $push: { favoriteMovies: req.params.movieId } },
         { new: true }
     )
-    .then((updatedUser) => {
-        if (!updatedUser) {
-            return res.status(404).send('User not found');
-        }
-        res.status(200).send(`Movie has been added to ${req.params.username}'s favorites`);
-    })
-    .catch((err) => {
-        console.error(err);
-        res.status(500).send('Error: ' + err);
-    });
+        .then((updatedUser) => {
+            if (!updatedUser) {
+                return res.status(404).send('User not found');
+            }
+            res.status(200).send(`Movie has been added to ${req.params.username}'s favorites`);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
 });
 
 // DELETE: Allow users to remove a movie from their list of favorites
@@ -166,16 +169,16 @@ app.delete('/users/:username/movies/:movieId', (req, res) => {
         { $pull: { favoriteMovies: req.params.movieId } },
         { new: true }
     )
-    .then((updatedUser) => {
-        if (!updatedUser) {
-            return res.status(404).send('User not found');
-        }
-        res.status(200).send(`Movie has been removed from ${req.params.username}'s favorites`);
-    })
-    .catch((err) => {
-        console.error(err);
-        res.status(500).send('Error: ' + err);
-    });
+        .then((updatedUser) => {
+            if (!updatedUser) {
+                return res.status(404).send('User not found');
+            }
+            res.status(200).send(`Movie has been removed from ${req.params.username}'s favorites`);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
 });
 
 // DELETE: Allow existing users to deregister
