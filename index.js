@@ -17,7 +17,7 @@ const Movies = Models.Movie;
 const Users = Models.User;
 
 // Connect to MongoDB using environment variable
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/cfDB', { 
+mongoose.connect(process.env.MONGODB_URI, { 
     useNewUrlParser: true, 
     useUnifiedTopology: true 
 });
