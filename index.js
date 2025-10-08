@@ -3,7 +3,10 @@ const express = require('express'),
     fs = require('fs'),
     path = require('path'),
     mongoose = require('mongoose'),
-    Models = require('./models.js');
+    Models = require('./models.js'),
+    { check, validationResult } = require('express-validator'),
+    helmet = require('helmet'),
+    rateLimit = require('express-rate-limit');
 
 const app = express();
 
@@ -14,8 +17,39 @@ const Users = Models.User;
 // Connect to MongoDB
 mongoose.connect('mongodb://localhost:27017/cfDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
-// Middleware to parse JSON bodies
-app.use(express.json());
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            styleSrc: ["'self'", "'unsafe-inline'"],
+            scriptSrc: ["'self'"],
+            imgSrc: ["'self'", "data:", "https:"]
+        }
+    }
+}));
+
+// Rate limiting to prevent brute force attacks
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+    message: 'Too many requests from this IP, please try again later.'
+});
+app.use(limiter);
+
+// Stricter rate limit for login attempts
+const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 5, // limit each IP to 5 login attempts per windowMs
+    skipSuccessfulRequests: true,
+    message: 'Too many login attempts, please try again later.'
+});
+
+// Middleware to parse JSON bodies with size limit
+app.use(express.json({ limit: '10mb' })); // Limit JSON payload size
+
+const cors = require('cors');
+app.use(cors());
+
 let auth = require('./auth')(app); // Import auth.js file and pass in app
 const passport = require('passport');
 require('./passport'); // Import passport.js file
@@ -92,7 +126,22 @@ app.get('/directors/:name', passport.authenticate('jwt', { session: false }), (r
 });
 
 // POST: Allow new users to register
-app.post('/users', (req, res) => {
+app.post('/users', [
+    // Validation rules
+    check('username', 'Username is required').isLength({ min: 5 }),
+    check('username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('password', 'Password is required').not().isEmpty(),
+    check('password', 'Password must be at least 8 characters long').isLength({ min: 8 }),
+    check('email', 'Email does not appear to be valid').isEmail(),
+    check('birthday', 'Birthday must be a valid date').isDate()
+], (req, res) => {
+    // Check validation object for errors
+    let errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+    }
+    let hashedPassword = Users.hashPassword(req.body.password);
     Users.findOne({ username: req.body.username })
         .then((user) => {
             if (user) {
@@ -101,7 +150,7 @@ app.post('/users', (req, res) => {
                 Users.create({
                     username: req.body.username,
                     email: req.body.email,
-                    password: req.body.password,
+                    password: hashedPassword,
                     birthday: req.body.birthday
                 })
                     .then((user) => {
@@ -119,22 +168,37 @@ app.post('/users', (req, res) => {
         });
 });
 
-// PUT: Allow users to update their user info
-app.put('/users/:username', passport.authenticate('jwt', { session: false }), (req, res) => {
+// PUT: Allow users to update their user info with validation
+app.put('/users/:username', [
+    // Validation rules (all optional for updates)
+    check('username', 'Username must be at least 5 characters long').optional().isLength({ min: 5 }),
+    check('username', 'Username contains non alphanumeric characters - not allowed.').optional().isAlphanumeric(),
+    check('password', 'Password must be at least 8 characters long').optional().isLength({ min: 8 }),
+    check('email', 'Email does not appear to be valid').optional().isEmail(),
+    check('birthday', 'Birthday must be a valid date').optional().isDate()
+], passport.authenticate('jwt', { session: false }), (req, res) => {
+    // Check validation object for errors
+    let errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+    }
+
     // Check if the user is updating their own info
     if (req.user.username !== req.params.username) {
         return res.status(400).send('Permission denied: You can only update your own profile.');
     }
+
+    // Prepare update object with only provided fields
+    let updateFields = {};
+    if (req.body.username) updateFields.username = req.body.username;
+    if (req.body.email) updateFields.email = req.body.email;
+    if (req.body.password) updateFields.password = Users.hashPassword(req.body.password);
+    if (req.body.birthday) updateFields.birthday = req.body.birthday;
+
     Users.findOneAndUpdate(
         { username: req.params.username },
-        {
-            $set: {
-                username: req.body.username,
-                email: req.body.email,
-                password: req.body.password,
-                birthday: req.body.birthday
-            }
-        },
+        { $set: updateFields },
         { new: true } // This line makes sure that the updated document is returned
     )
         .then((updatedUser) => {

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 // Genre subdocument schema
 let genreSchema = mongoose.Schema({
@@ -33,6 +34,16 @@ let userSchema = mongoose.Schema({
     birthday: { type: Date, required: true },
     favoriteMovies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Movie' }]
 });
+
+// Password hashing method for users
+userSchema.statics.hashPassword = (password) => {
+    return bcrypt.hashSync(password, 10);
+};
+
+// Instance method to validate password
+userSchema.methods.validatePassword = function (password) {
+    return bcrypt.compareSync(password, this.password);
+};
 
 // Create models
 let Movie = mongoose.model('Movie', movieSchema);
