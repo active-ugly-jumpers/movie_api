@@ -1,31 +1,92 @@
 # Movie API
 
-A simple Node.js HTTP server that serves static HTML files and logs requests for a movie information API project.
+A RESTful API for managing movies and user data, built with Node.js, Express.js, MongoDB, and JWT authentication.
 
-## Description
+## Overview
 
-This project is the foundation for a movie API (myFlix) that will eventually provide access to information about movies, directors, and genres. Currently, it serves as a basic HTTP server with file serving capabilities and request logging.
+The Movie API provides endpoints for retrieving movie information, managing user accounts, and maintaining user favorite movie lists. It includes secure authentication, input validation, and comprehensive security middleware.
 
 ## Features
 
-- **Static File Serving**: Serves HTML documentation and index pages
-- **Request Logging**: Logs all incoming requests with timestamps to `log.txt`
-- **URL Routing**: Routes to documentation or index page based on URL path
+- **Movie Management**: Get all movies, search by title, filter by genre or director
+- **User Authentication**: JWT-based authentication with secure login/registration
+- **User Management**: Create, update, and delete user accounts
+- **Favorites System**: Add/remove movies from user favorites
+- **Security**: Rate limiting, input validation, password hashing, CORS protection
+- **Cloud Database**: MongoDB Atlas integration
+- **Deployment Ready**: Configured for Heroku deployment
 
 ## Tech Stack
 
-- **Node.js** - Runtime environment
+- **Backend**: Node.js, Express.js
+- **Database**: MongoDB with Mongoose ODM
+- **Authentication**: Passport.js with JWT strategy
+- **Security**: Helmet, bcrypt, express-rate-limit, express-validator
+- **Deployment**: Heroku
+- **Cloud Database**: MongoDB Atlas
 
-## Future Development
+## API Endpoints
 
-This project will be expanded to include:
-- Express.js framework integration
-- MongoDB database connection
-- RESTful API endpoints for movies, directors, and genres
-- User authentication and authorization
-- User profile management
-- Favorite movies functionality
+### Authentication
+- `POST /login` - User login (returns JWT token)
+- `POST /users` - User registration
 
-## Author
+### Movies (Protected Routes)
+- `GET /movies` - Get all movies
+- `GET /movies/:title` - Get movie by title
+- `GET /genres/:name` - Get genre information
+- `GET /directors/:name` - Get director information
 
-Created as part of a full-stack JavaScript web development project.
+### User Management (Protected Routes)
+- `PUT /users/:username` - Update user information
+- `PUT /users/:username/movies/:movieId` - Add movie to favorites
+- `DELETE /users/:username/movies/:movieId` - Remove movie from favorites
+- `DELETE /users/:username` - Delete user account
+
+## Usage Examples
+
+### Register a New User
+```bash
+POST /users
+Content-Type: application/json
+
+{
+  "username": "moviefan123",
+  "email": "moviefan@example.com",
+  "password": "securepass123",
+  "birthday": "1990-05-15"
+}
+```
+
+### Login
+```bash
+POST /login
+Content-Type: application/json
+
+{
+  "username": "moviefan123",
+  "password": "securepass123"
+}
+```
+
+### Get All Movies (Protected)
+```bash
+GET /movies
+Authorization: Bearer <jwt-token>
+```
+
+### Add Movie to Favorites (Protected)
+```bash
+PUT /users/moviefan123/movies/60d21b4667d0d8992e610c85
+Authorization: Bearer <jwt-token>
+```
+
+## Security Features
+
+- **JWT Authentication**: Secure token-based authentication
+- **Password Hashing**: bcrypt encryption for user passwords
+- **Rate Limiting**: Protection against brute force attacks
+- **Input Validation**: Comprehensive validation using express-validator
+- **CORS Protection**: Cross-origin resource sharing configuration
+- **Security Headers**: Helmet middleware for security headers
+- **Environment Variables**: Secure configuration management
