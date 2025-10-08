@@ -1,4 +1,6 @@
-const jwtSecret = '19a2e08e75699de81d3747766841dee274c9d96d621cfd1c630ced096bfcef0703689cf939f561127b3986046c8c91854e30d1ed98c089fea2e18def4c78b09a'; // This has to be the same key used in the JWTStrategy
+
+require('dotenv').config();
+const jwtSecret = process.env.JWT_SECRET;
 
 const jwt = require('jsonwebtoken'),
   passport = require('passport');

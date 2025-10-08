@@ -3,6 +3,8 @@ const passport = require('passport'),
     Models = require('./models.js'),
     passportJWT = require('passport-jwt');
 
+require('dotenv').config();
+
 let Users = Models.User,
     JWTStrategy = passportJWT.Strategy,
     ExtractJWT = passportJWT.ExtractJwt;
@@ -39,7 +41,7 @@ passport.use(
 // JWT strategy for token verification
 passport.use(new JWTStrategy({
     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-    secretOrKey: '19a2e08e75699de81d3747766841dee274c9d96d621cfd1c630ced096bfcef0703689cf939f561127b3986046c8c91854e30d1ed98c089fea2e18def4c78b09a'
+    secretOrKey: process.env.JWT_SECRET
 }, async (jwtPayload, callback) => {
     return await Users.findById(jwtPayload._id)
         .then((user) => {

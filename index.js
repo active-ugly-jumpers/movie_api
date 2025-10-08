@@ -8,14 +8,21 @@ const express = require('express'),
     helmet = require('helmet'),
     rateLimit = require('express-rate-limit');
 
+require('dotenv').config();
+
 const app = express();
 
 // Import models
 const Movies = Models.Movie;
 const Users = Models.User;
 
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/cfDB', { useNewUrlParser: true, useUnifiedTopology: true });
+// Connect to MongoDB using environment variable
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/cfDB', { 
+    useNewUrlParser: true, 
+    useUnifiedTopology: true 
+});
+
+const port = process.env.PORT || 8080;
 
 app.use(helmet({
     contentSecurityPolicy: {
@@ -280,7 +287,6 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something went wrong!');
 });
 
-const port = process.env.PORT || 8080;
 app.listen(port, '0.0.0.0', () => {
     console.log('Listening on Port ' + port);
 });
