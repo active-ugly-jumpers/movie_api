@@ -43,14 +43,6 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// Stricter rate limit for login attempts
-const loginLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 5, // limit each IP to 5 login attempts per windowMs
-    skipSuccessfulRequests: true,
-    message: 'Too many login attempts, please try again later.'
-});
-
 // Middleware to parse JSON bodies with size limit
 app.use(express.json({ limit: '10mb' })); // Limit JSON payload size
 
@@ -72,25 +64,15 @@ app.use(express.static('public'));
 
 // GET: Returns a list of all movies
 app.get('/movies', (req, res) => {
-    Movies.find()
-        .then((movies) => {
-            res.status(200).json(movies);
-        })
-        .catch((err) => {
-            console.error(err);
-            res.status(500).send('Error: ' + err);
-        });
-});
-
-// GET: Return data about a single movie by title
-app.get('/movies/:title', passport.authenticate('jwt', { session: false }),
-    (req, res) => {
-        Movies.findOne({ title: req.params.title })
-            .then((movie) => {
-                if (movie) {
-                    res.status(200).json(movie);
-                } else {
-                    res.status(404).send('Movie not found');
+        Movies.find()
+            .then((movies) => {
+                res.status(200).json(movies);
+            })
+            .catch((err) => {
+                console.error(err);
+                res.status(500).send('Error: ' + err);
+            });
+    });
 
 // GET: Return data about a single movie by title
 app.get('/movies/:title', passport.authenticate('jwt', { session: false }),
