@@ -71,17 +71,26 @@ app.get('/', (req, res) => {
 app.use(express.static('public'));
 
 // GET: Returns a list of all movies
-app.get('/movies', passport.authenticate('jwt', { session: false }),
+app.get('/movies', (req, res) => {
+    Movies.find()
+        .then((movies) => {
+            res.status(200).json(movies);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
+});
+
+// GET: Return data about a single movie by title
+app.get('/movies/:title', passport.authenticate('jwt', { session: false }),
     (req, res) => {
-        Movies.find()
-            .then((movies) => {
-                res.status(200).json(movies);
-            })
-            .catch((err) => {
-                console.error(err);
-                res.status(500).send('Error: ' + err);
-            });
-    });
+        Movies.findOne({ title: req.params.title })
+            .then((movie) => {
+                if (movie) {
+                    res.status(200).json(movie);
+                } else {
+                    res.status(404).send('Movie not found');
 
 // GET: Return data about a single movie by title
 app.get('/movies/:title', passport.authenticate('jwt', { session: false }),
