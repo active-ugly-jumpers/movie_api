@@ -63,7 +63,8 @@ app.get('/', (req, res) => {
 app.use(express.static('public'));
 
 // GET: Returns a list of all movies
-app.get('/movies', (req, res) => {
+app.get('/movies', passport.authenticate('jwt', { session: false }),
+    (req, res) => {
         Movies.find()
             .then((movies) => {
                 res.status(200).json(movies);
