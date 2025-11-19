@@ -266,6 +266,19 @@ app.delete('/users/:username', passport.authenticate('jwt', { session: false }),
         });
 });
 
+// GET: Return all users (INSECURE - for development only)
+app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
+    Users.find()
+        .select('-password') // At least exclude passwords from response
+        .then((users) => {
+            res.status(200).json(users);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
     console.error('Error occurred:');
