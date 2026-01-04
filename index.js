@@ -281,6 +281,23 @@ app.delete('/users/:username', passport.authenticate('jwt', { session: false }),
         });
 });
 
+
+// GET: Return a single user by username
+app.get('/users/:username', passport.authenticate('jwt', { session: false }), (req, res) => {
+    Users.findOne({ username: req.params.username })
+        .select('-password')
+        .then((user) => {
+            if (!user) {
+                return res.status(404).send('User not found');
+            }
+            res.status(200).json(user);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
+});
+
 // GET: Return all users (INSECURE - for development only)
 app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
     Users.find()
