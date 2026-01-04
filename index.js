@@ -236,13 +236,13 @@ app.put('/users/:username/movies/:movieId', passport.authenticate('jwt', { sessi
     )
         .then((updatedUser) => {
             if (!updatedUser) {
-                return res.status(404).send('User not found');
+                return res.status(404).json({ error: 'User not found' });
             }
-            res.status(200).send(`Movie has been added to ${req.params.username}'s favorites`);
+            res.status(200).json({ message: `Movie has been added to ${req.params.username}'s favorites`, user: updatedUser });
         })
         .catch((err) => {
             console.error(err);
-            res.status(500).send('Error: ' + err);
+            res.status(500).json({ error: err.toString() });
         });
 });
 
@@ -255,13 +255,13 @@ app.delete('/users/:username/movies/:movieId', passport.authenticate('jwt', { se
     )
         .then((updatedUser) => {
             if (!updatedUser) {
-                return res.status(404).send('User not found');
+                return res.status(404).json({ error: 'User not found' });
             }
-            res.status(200).send(`Movie has been removed from ${req.params.username}'s favorites`);
+            res.status(200).json({ message: `Movie has been removed from ${req.params.username}'s favorites`, user: updatedUser });
         })
         .catch((err) => {
             console.error(err);
-            res.status(500).send('Error: ' + err);
+            res.status(500).json({ error: err.toString() });
         });
 });
 
