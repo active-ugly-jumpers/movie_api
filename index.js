@@ -50,7 +50,8 @@ const cors = require('cors');
 let allowedOrigins = [
     'http://localhost:8080',
     'http://localhost:4200',
-    'https://active-ugly-jumpers.netlify.app'
+    'https://active-ugly-jumpers.netlify.app',
+    'https://active-ugly-jumpers.github.io/myFlix-Angular-client/'
 ];
 
 app.use(cors({
