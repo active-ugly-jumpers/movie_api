@@ -6,6 +6,10 @@ A RESTful API for managing movies and user data, built with Node.js, Express.js,
 
 The Movie API provides endpoints for retrieving movie information, managing user accounts, and maintaining user favorite movie lists. It includes secure authentication, input validation, and comprehensive security middleware.
 
+## Live Demo & Documentation
+
+You can view the live API documentation here: [Movie API Documentation](https://arcane-movies-f00164225bec.herokuapp.com/documentation.html)
+
 ## Features
 
 - **Movie Management**: Get all movies, search by title, filter by genre or director
