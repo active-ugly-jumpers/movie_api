@@ -1,3 +1,9 @@
+/**
+ * Main entry point for the Movie API server.
+ * Sets up Express app, middleware, routes, and database connection.
+ */
+
+// Core dependencies and middleware
 const express = require('express'),
     morgan = require('morgan'),
     fs = require('fs'),
@@ -8,21 +14,28 @@ const express = require('express'),
     helmet = require('helmet'),
     rateLimit = require('express-rate-limit');
 
+
 require('dotenv').config();
 
+/**
+ * Express application instance
+ * @type {import('express').Application}
+ */
 const app = express();
 
-// Import models
 const Movies = Models.Movie;
 const Users = Models.User;
 
-// Connect to MongoDB using environment variable
+/**
+ * Connect to MongoDB database
+ */
 mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
 
 const port = process.env.PORT || 8080;
+
 
 app.use(helmet({
     contentSecurityPolicy: {
@@ -35,16 +48,15 @@ app.use(helmet({
     }
 }));
 
-// Rate limiting to prevent brute force attacks
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // limit each IP to 100 requests per windowMs
+    windowMs: 15 * 60 * 1000,  // 15 minutes
+    max: 100,                  // limit each IP to 100 requests per windowMs
     message: 'Too many requests from this IP, please try again later.'
 });
 app.use(limiter);
 
-// Middleware to parse JSON bodies with size limit
-app.use(express.json({ limit: '10mb' })); // Limit JSON payload size
+app.use(express.json({ limit: '10mb' }));
+
 
 const cors = require('cors');
 let allowedOrigins = [
@@ -57,7 +69,8 @@ let allowedOrigins = [
 app.use(cors({
     origin: (origin, callback) => {
         if (!origin) return callback(null, true);
-        if (allowedOrigins.indexOf(origin) === -1) { // If a specific origin isn’t found on the list of allowed origins
+        // If a specific origin isn’t found on the list of allowed origins
+        if (allowedOrigins.indexOf(origin) === -1) {
             let message = 'The CORS policy for this application doesn’t allow access from origin ' + origin;
             return callback(new Error(message), false);
         }
@@ -65,13 +78,20 @@ app.use(cors({
     }
 }));
 
-let auth = require('./auth')(app); // Import auth.js file and pass in app
+let auth = require('./auth')(app);
 const passport = require('passport');
-require('./passport'); // Import passport.js file
+require('./passport');
 
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), { flags: 'a' })
 app.use(morgan('common', { stream: accessLogStream }));
 
+
+/**
+ * Root endpoint
+ * @name GET /
+ * @function
+ * @returns {string} Welcome message
+ */
 app.get('/', (req, res) => {
     res.send('Welcome to my movies club in the making!');
 });
@@ -169,7 +189,10 @@ app.post('/users', [
                     birthday: req.body.birthday
                 })
                     .then((user) => {
-                        res.status(201).json(user);
+                        // Exclude password from response
+                        const userObj = user.toObject();
+                        delete userObj.password;
+                        res.status(201).json(userObj);
                     })
                     .catch((error) => {
                         console.error(error);
@@ -300,17 +323,17 @@ app.get('/users/:username', passport.authenticate('jwt', { session: false }), (r
 });
 
 // GET: Return all users (INSECURE - for development only)
-app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
-    Users.find()
-        .select('-password') // At least exclude passwords from response
-        .then((users) => {
-            res.status(200).json(users);
-        })
-        .catch((err) => {
-            console.error(err);
-            res.status(500).send('Error: ' + err);
-        });
-});
+// app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
+//     Users.find()
+//         .select('-password') // At least exclude passwords from response
+//         .then((users) => {
+//             res.status(200).json(users);
+//         })
+//         .catch((err) => {
+//             console.error(err);
+//             res.status(500).send('Error: ' + err);
+//         });
+// });
 
 // Error handling middleware
 app.use((err, req, res, next) => {

@@ -1,23 +1,30 @@
 
+
 require('dotenv').config();
 const jwtSecret = process.env.JWT_SECRET;
 
 const jwt = require('jsonwebtoken'),
   passport = require('passport');
 
-require('./passport'); // Your local passport file
+require('./passport'); // Local passport strategy config
 
-
+/**
+ * Generates a JWT token for a user.
+ * @param {Object} user - User object
+ * @returns {string} JWT token
+ */
 let generateJWTToken = (user) => {
   return jwt.sign(user, jwtSecret, {
-    subject: user.username, // This is the username you’re encoding in the JWT
-    expiresIn: '7d', // This specifies that the token will expire in 7 days
-    algorithm: 'HS256' // This is the algorithm used to “sign” or encode the values of the JWT
+    subject: user.username, // Encoded username
+    expiresIn: '7d', // Token expires in 7 days
+    algorithm: 'HS256' // Signing algorithm
   });
 }
 
-
-/* POST login. */
+/**
+ * POST /login route for user authentication.
+ * @param {Object} router - Express router
+ */
 module.exports = (router) => {
   router.post('/login', (req, res) => {
     passport.authenticate('local', { session: false }, (error, user, info) => {

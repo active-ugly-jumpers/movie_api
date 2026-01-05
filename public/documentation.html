@@ -8,128 +8,137 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 1600px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
-            line-height: 1.6;
-            background-color: #f9f9f9;
+            padding: 24px;
+            line-height: 1.7;
+            background-color: #f6f6f6;
+            color: #222;
         }
 
         h1 {
-            color: #333;
+            color: #111;
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 32px;
+            letter-spacing: 1px;
         }
 
         .intro {
-            background-color: white;
-            padding: 20px;
+            background-color: #ededed;
+            padding: 20px 28px;
             border-radius: 8px;
-            margin-bottom: 30px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 32px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
-            background-color: white;
+            margin: 24px 0;
+            background-color: #fafafa;
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         th,
         td {
-            border: 1px solid #ddd;
-            padding: 12px;
+            border: 1px solid #d3d3d3;
+            padding: 12px 14px;
             text-align: left;
             vertical-align: top;
         }
 
         th {
-            background-color: #2c3e50;
-            color: white;
+            background-color: #e5e5e5;
+            color: #111;
             font-weight: bold;
             text-align: center;
+            letter-spacing: 0.5px;
         }
 
         .method {
             font-weight: bold;
             text-align: center;
-            padding: 8px;
+            padding: 7px 0;
             border-radius: 4px;
-            color: white;
+            min-width: 60px;
+            color: #fff;
         }
-
         .method.get {
-            background-color: #28a745;
+            background-color: #b7d7b0;
         }
-
         .method.post {
-            background-color: #007bff;
+            background-color: #b3c7e6;
         }
-
         .method.put {
-            background-color: #ffc107;
-            color: #333;
+            background-color: #ffe0b2;
         }
-
         .method.delete {
-            background-color: #dc3545;
+            background-color: #e6b3b3;
         }
 
         .url {
             font-family: 'Courier New', monospace;
-            background-color: #f8f9fa;
-            padding: 8px;
+            background-color: #f0f0f0;
+            padding: 8px 10px;
             border-radius: 4px;
             font-weight: bold;
+            color: #222;
         }
 
         .code-block {
             font-family: 'Courier New', monospace;
-            background-color: #f8f9fa;
-            padding: 8px;
+            background-color: #f0f0f0;
+            padding: 8px 10px;
             border-radius: 4px;
-            font-size: 0.85em;
-            line-height: 1.4;
-            border-left: 3px solid #007bff;
+            font-size: 0.95em;
+            line-height: 1.5;
+            border-left: 3px solid #bbb;
+            color: #222;
         }
 
         .response-block {
             font-family: 'Courier New', monospace;
-            background-color: #f0f8f0;
-            padding: 8px;
+            background-color: #f0f0f0;
+            padding: 8px 10px;
             border-radius: 4px;
-            font-size: 0.85em;
-            line-height: 1.4;
-            border-left: 3px solid #28a745;
+            font-size: 0.95em;
+            line-height: 1.5;
+            border-left: 3px solid #bbb;
+            color: #222;
         }
 
         .description {
-            font-size: 0.95em;
-            max-width: 280px;
+            font-size: 1em;
+            max-width: 320px;
         }
 
         .notes {
-            background-color: white;
+            background-color: #ededed;
             padding: 20px;
             border-radius: 8px;
-            margin-top: 30px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-top: 32px;
         }
 
         .param-note {
             color: #666;
             font-style: italic;
-            font-size: 0.85em;
+            font-size: 0.92em;
         }
     </style>
 </head>
 
 <body>
+
     <h1>Movie API Documentation</h1>
+
+    <div class="intro">
+        <h2>Authentication</h2>
+        <p>
+            <strong>All endpoints require authentication via JWT.</strong><br>
+            You must include an <code>Authorization: Bearer &lt;JWT_TOKEN&gt;</code> header in your requests.<br>
+            Obtain a token by logging in via the <code>/login</code> endpoint.
+        </p>
+    </div>
 
     <table>
         <thead>
@@ -143,6 +152,27 @@
             </tr>
         </thead>
         <tbody>
+            <tr>
+                <td class="description">Authenticate user and return a JWT token for use in subsequent requests</td>
+                <td class="method post">POST</td>
+                <td class="url">/login</td>
+                <td class="param-note">None</td>
+                <td class="code-block">JSON Object (required):<br>
+                    {<br>
+                    &nbsp;&nbsp;"username": "cinephile01",<br>
+                    &nbsp;&nbsp;"password": "password123"<br>
+                    }
+                </td>
+                <td class="response-block">JSON Object:<br>
+                    {<br>
+                    &nbsp;&nbsp;"user": { ...user object, no password... },<br>
+                    &nbsp;&nbsp;"token": "&lt;JWT_TOKEN&gt;"<br>
+                    }<br><br>
+                    Status: 200 OK<br><br>
+                    Error Response:<br>
+                    { "message": "Something is not right", "user": null } (Status: 400)
+                </td>
+            </tr>
             <tr>
                 <td class="description">Returns a complete list of all movies from MongoDB database</td>
                 <td class="method get">GET</td>
@@ -240,17 +270,18 @@
                     &nbsp;&nbsp;"_id": "68dab3827250d28a9cce5f51",<br>
                     &nbsp;&nbsp;"username": "cinephile01",<br>
                     &nbsp;&nbsp;"email": "cinephile01@example.com",<br>
-                    &nbsp;&nbsp;"password": "password123",<br>
                     &nbsp;&nbsp;"birthday": "1990-05-12T00:00:00.000Z",<br>
                     &nbsp;&nbsp;"favoriteMovies": [],<br>
                     &nbsp;&nbsp;"__v": 0<br>
-                    }<br><br>
+                    }<br>
+                    <span class="param-note">Note: The password is never returned in the response.</span><br><br>
                     Status: 201 Created<br><br>
                     Error Response:<br>
-                    "username already exists" (Status: 400)</td>
+                    "username already exists" (Status: 400)
+                </td>
             </tr>
             <tr>
-                <td class="description">Updates user information using $set operator (only provided fields are updated)</td>
+                <td class="description">Updates user information (only provided fields are updated)</td>
                 <td class="method put">PUT</td>
                 <td class="url">/users/[username]</td>
                 <td class="param-note">username (URL parameter)<br>Example: /users/cinephile01</td>
@@ -276,31 +307,39 @@
                     "User not found" (Status: 404)</td>
             </tr>
             <tr>
-                <td class="description">Adds a movie ObjectId to user's favoriteMovies array using $push operator</td>
+                <td class="description">Adds a movie ObjectId to user's favoriteMovies array </td>
                 <td class="method put">PUT</td>
                 <td class="url">/users/[username]/movies/[movieId]</td>
                 <td class="param-note">username (URL parameter)<br>movieId (MongoDB ObjectId)<br>Example: /users/cinephile01/movies/68dab3357250d28a9cce5f47</td>
                 <td class="code-block">None</td>
-                <td class="response-block">Plain Text:<br>
-                    "Movie has been added to cinephile01's favorites"<br><br>
+                <td class="response-block">JSON Object:<br>
+                    {<br>
+                    &nbsp;&nbsp;"message": "Movie has been added to cinephile01's favorites",<br>
+                    &nbsp;&nbsp;"user": { ...updated user object... }<br>
+                    }<br><br>
                     Status: 200 OK<br><br>
                     Error Response:<br>
-                    "User not found" (Status: 404)</td>
+                    { "error": "User not found" } (Status: 404)
+                </td>
             </tr>
             <tr>
-                <td class="description">Removes a movie ObjectId from user's favoriteMovies array using $pull operator</td>
+                <td class="description">Removes a movie ObjectId from user's favoriteMovies array </td>
                 <td class="method delete">DELETE</td>
                 <td class="url">/users/[username]/movies/[movieId]</td>
                 <td class="param-note">username (URL parameter)<br>movieId (MongoDB ObjectId)<br>Example: /users/cinephile01/movies/68dab3357250d28a9cce5f47</td>
                 <td class="code-block">None</td>
-                <td class="response-block">Plain Text:<br>
-                    "Movie has been removed from cinephile01's favorites"<br><br>
+                <td class="response-block">JSON Object:<br>
+                    {<br>
+                    &nbsp;&nbsp;"message": "Movie has been removed from cinephile01's favorites",<br>
+                    &nbsp;&nbsp;"user": { ...updated user object... }<br>
+                    }<br><br>
                     Status: 200 OK<br><br>
                     Error Response:<br>
-                    "User not found" (Status: 404)</td>
+                    { "error": "User not found" } (Status: 404)
+                </td>
             </tr>
             <tr>
-                <td class="description">Completely removes a user document from the database using findOneAndDelete</td>
+                <td class="description">Completely removes a user document from the database</td>
                 <td class="method delete">DELETE</td>
                 <td class="url">/users/[username]</td>
                 <td class="param-note">username (URL parameter)<br>Example: /users/cinephile01</td>
